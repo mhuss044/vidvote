@@ -37,12 +37,17 @@
 		// String which stores comma separated vid ids
 		$playList;
 		$lastID;
+
+		// Start bodyBox:
+		echo "<div class=\"bodyBox\">";
 		//Get every line, print it
 		while(!feof($file))
 		{
 			$num++;
 			$line = fgets($file);
 			
+			// Start subBox:
+			echo "<div class=\"subBox\">";
 			// Display Data:
 			echo $num.". ".$line."<br />";
 			
@@ -100,9 +105,13 @@
 				// Store ID:
 				$lastID = substr($line, strpos($line, "?v=")+3);
 			}
+
+			// End subBox:
+			echo "</div>";
 		}
 			
 
+		echo "<div class=\"subBox\">";
 		echo "<br>All your videos in one looping playlist:<br />";
 		echo "<br>First vid to play:".$lastID;
 		echo "<br>All your vids:".$playList;
@@ -110,6 +119,10 @@
 		echo "<br><br>";
 		echo "<object width=\"425\" height=\"350\" data=\"http://www.youtube.com/v/$lastID?version=3&loop=1&playlist=$playList\" type=\"application/x-shockwave-flash\"><param name=\"src\" value=\"http://www.youtube.com/v/$lastID?version=3&loop=1&playlist=$playList\" ></object>";
 		echo "<br><br>";
+		echo "</div>";
+
+		// End bodyBox:
+		echo "</div>";
 	}
 	fclose($file);
 ?>

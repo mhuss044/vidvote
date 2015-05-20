@@ -4,10 +4,6 @@
 <?php include("menu.php"); ?>
 <center><h1>Community Lists</h1></center>
 
-
-<p>Vote on vids, goto: <a href="index.php">Home</a></p>
-
-
 // allow access to list by append /listname
 // dashboard; create new list under acc, make directory for acc, lists inside
 // load names of files
@@ -31,6 +27,7 @@ rename()
 	echo "<br><br><br>";
 	echo "Which would you like to view? <br>";
 	echo "<form action=\"viewList.php\" method=\"get\">";
+	echo "<div class=\"bodyBox\">";
 	
 	// specifiy current dir
 	$handle = opendir('.');
@@ -43,11 +40,12 @@ rename()
         if(strpos($entry,".txt"))
 		{
 			$counter++;
-			echo "<br>$entry\n";
-			echo "<br><input type=\"radio\" name=\"count\" value=\"$counter\"/> This one?";
-			echo "<br><br><br>";
+			echo "<div class=\"subBox\">";
+			echo "<input type=\"radio\" name=\"count\" value=\"$counter\"/>$entry\n";
+			echo "</div>";
 		}
     }
+	echo "</div>";
 	echo "<br><br><br><input type=\"submit\" />";
 	echo "</form>";
 ?>

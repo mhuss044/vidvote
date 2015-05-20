@@ -31,8 +31,19 @@ stuff: <input type="text" name="usr" />
 
 <div id="myContent">
 
-<?php 
 
+<?php 
+echo "<div class=\"bodyBox\">";
+	echo "<div class=\"subBox\">";
+	echo "fffffffffffffffff";
+	echo "</div>";
+	echo "<div class=\"subBox\">";
+	echo "fffffffffffffffffffffff";
+	echo "</div>";
+echo "</div>";
+?>
+
+<?php 
 //Doesnt Work, php server side interpreted, yada yada:
 /*
 function writeName()

@@ -48,7 +48,9 @@ if (isset($_COOKIE["usr"]))
 			echo "<META HTTP-EQUIV=\"refresh\" CONTENT=\"1;URL=ylists.php\">";
 		}
 		
-		
+		// Setup containing box, to allow float left:
+		echo "<div class=\"bodyBox\">";	
+
 		// Read, output file:
 		$num = 0;
 		// String which stores comma separated vid ids
@@ -60,7 +62,9 @@ if (isset($_COOKIE["usr"]))
 			$num++;
 			$line = fgets($file);
 			
+
 			// Display Data:
+			echo "<div class=\"subBox\">";	
 			echo $num.". ".$line."<br />";
 			
 			if(strlen($line) == 11 || strlen($line) == 12)		// User inputs 11 char youtube vid code
@@ -118,9 +122,13 @@ if (isset($_COOKIE["usr"]))
 				// Store ID:
 				$lastID = substr($line, strpos($line, "?v=")+3);
 			}
+
+			// Close subBox div:
+			echo "</div>";
 		}
 			
 
+		echo "<div class=\"subBox\">";
 		echo "<br>All your videos in one looping playlist:<br />";
 		echo "<br>First vid to play:".$lastID;
 		echo "<br>All your vids:".$playList;
@@ -128,6 +136,11 @@ if (isset($_COOKIE["usr"]))
 		echo "<br><br>";
 		echo "<object width=\"425\" height=\"350\" data=\"http://www.youtube.com/v/$lastID?version=3&loop=1&playlist=$playList\" type=\"application/x-shockwave-flash\"><param name=\"src\" value=\"http://www.youtube.com/v/$lastID?version=3&loop=1&playlist=$playList\" ></object>";
 		echo "<br><br>";
+
+		// End subBox div
+		echo "</div>";
+		// End bodyBox div
+		echo "</div>";
 	}
   fclose($file);
 }

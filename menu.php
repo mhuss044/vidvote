@@ -60,7 +60,7 @@ color:orange;
 
 body 
 {
-background-color:#b0c4de;
+background-color:#58626f;
 /*background-image:url('banner.jpg');*/
 /*background-repeat:no-repeat;*/
 /*background-position:center;*/
@@ -90,6 +90,32 @@ background-color:#7A991A;
 /*a:visited {color:#00FF00; background-color:#FFFF85;}*/  /* visited link */
 /*a:hover {color:#FF00FF; background-color:#FF704D;}*/  /* mouse over link */
 /*a:active {color:#0000FF; background-color:#FF704D;}*/  /* selected link */
+
+.bodyBox
+{
+	border-style:solid;
+	border-width:5px;	
+        /*border-color:#000000;*/
+background-color:#333300;
+	padding:4px;
+	background-color:#333300;
+}
+
+.subBox
+{
+	float:left;
+	border-style:solid;
+	border-width:5px;	
+        border-color:#000000;
+	padding:4px;
+	text-align:center;
+}
+
+.subBox:hover,subBox:active
+{
+	background-color:#7A991A;
+}
+
 </style>
 
 <head>

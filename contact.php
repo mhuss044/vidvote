@@ -13,7 +13,7 @@
 	echo "<form action=\"contact.php\" method=\"post\">";
 	echo "Your email: <input type=\"text\" name=\"uemail\" />";
 	echo "Your message: <input type=\"text\" name=\"umsg\" />";
-	echo "<input type=\"image\" src=\"submit.png\" name=\"sub\" />";
+	echo "<input type=\"image\" src=\"/res/submit.png\" name=\"sub\" />";
 	echo "</form>";
 	
 	// Set a cookie to play as symbol to want to send msg:
@@ -71,3 +71,5 @@
 
 </body>
 </html>
+
+

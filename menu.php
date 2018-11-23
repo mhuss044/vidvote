@@ -125,7 +125,7 @@ background-color:#333300;
 </head>
 <body>
 
-<center><img src="banner.jpg" width="204" height="100" /></center>
+<center><img src="/res/banner.jpg" width="204" height="100" /></center>
 <center><h1>Menu</h1></center>
 
 <center>

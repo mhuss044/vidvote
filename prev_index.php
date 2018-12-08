@@ -9,7 +9,10 @@
 				<script type="text/javascript">
 					swfobject.embedSWF("http://www.youtube.com/v/-XTToohju4s ", "myContent", "300", "120", "9.0.0");
 				</script>
+				<!-- Angular -->
 				<script src = "https://ajax.googleapis.com/ajax/libs/angularjs/1.7.5/angular.min.js"></script>
+				<!-- Angular view routing -->
+				<script src = "https://ajax.googleapis.com/ajax/libs/angularjs/1.7.5/angular-route.min.js"></script>
 		</head>
 
 		<body ng-app = "AJSapp">		<!--Specify that ajs app contained within body -->
@@ -20,31 +23,90 @@
 				?>
 				<!-- use exCtrl for this div -->
 				<div ng-controller = "exCtrl">		
-						<h2>Welcome {{helloTo.title}} !</h2>
+						<h2>Welcome {{obj.val()}} !</h2>
 				</div>
+				<p>		<!-- Links to switch view -->
+						<a href = "#viewMessageBoard">View Mesage Board</a> , 
+						<a href = "#hideMessageBoard">Hide Message Board</a>
+				</p>
+				<div ng-view></div>		<!-- Where router will place view -->
+				<!-- Define some ng-templates, id as the .htm files -->
+				<script type = "text/ng-template" id = "viewMessageBoard.htm">
+						<h1> Enter your name and a message, press submit to add to message board.</h1>
+						{{message}}
+				</script>
+				<script type = "text/ng-template" id = "hideMessageBoard.htm">
+						<h1> Click link to show the message board. </h1>
+				</script>
+
 				<script>							
+						// create AJSapp module
+						var AJSapp = angular.module("AJSapp", ['ngRoute']);		// Load with dependency ngRoute
+						// $routeProvider is a services which sets config of URLs, maps em to corresponding .htm page of ng-template
+						// attaches a controller as well 
+						AJSapp.config(['$routeProvider', function($routeProvider) 
+						{
+								$routeProvider.when
+								('/viewMessageBoard', 
+										{
+												templateUrl: 'viewMessageBoard.htm', 
+												controller: 'msgBoardController'
+										}
+								);
+								$routeProvider.when
+								('/hideMessageBoard', 
+										{
+												templateUrl: 'hideMessageBoard.htm', 
+												controller: 'hideMsgBoardController'
+										}
+								);
+								$routeProvider.otherwise
+								(
+										{
+										 		redirectTo: '/hideMessageBoard'
+										}
+								);
+						}]);
 
-						<!-- create AJSapp module -->
-						var AJSapp = angular.module("AJSapp", []);
-
-						<!-- register controller func exCtrl in AJSapp module -->
-						<!-- scope passed to controller func, create hellto obj, add title field -->
-						AJSapp.controller("exCtrl", function($scope) 
+						AJSapp.controller("msgBoardController", function($scope) 
 								{
-										$scope.helloTo = {};
+										$scope.message = "yeyerr"; 
 										$scope.helloTo.title = "geg";
-										$scope.objs = 
+										$scope.obj = 
 										{
 												name: "namename",
 												num: 5,
 												val: function()
 												{
 														var data = $scope.obj;
-														return data.name + " 5 + num = " 5 + data,num;
-
-										}
+														return data.name + ", 5 + num = " + (5 + data.num);
+												}
+										};
 								}
-						);		<!-- end controller func -->
+						);		// end controller func 
+
+						AJSapp.controller("hideMsgBoardController", function($scope) 
+								{
+								}
+						);		// end controller func 
+						// register controller func exCtrl in AJSapp module 
+						// scope passed to controller func, create hellto obj, add title field 
+						AJSapp.controller("exCtrl", function($scope) 
+								{
+										$scope.helloTo = {};
+										$scope.helloTo.title = "geg";
+										$scope.obj = 
+										{
+												name: "namename",
+												num: 5,
+												val: function()
+												{
+														var data = $scope.obj;
+														return data.name + ", 5 + num = " + (5 + data.num);
+												}
+										};
+								}
+						);		// end controller func 
 				</script>
 
 				<br>

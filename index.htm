@@ -1,0 +1,179 @@
+<!-- TODO -->
+<!-- k so user gives username, script opens .txt file named username -->
+<!-- file lists YT links, with two values beside em: ups, downs -->
+<!-- display this info -->
+<!-- display this info http://www.w3schools.com/php/php_file.asp -->
+<html>
+		<head>
+				<link rel="stylesheet" type="text/css" href="style.css">
+				<script type="text/javascript" src="swfobject.js"></script>
+				<script type="text/javascript">
+					swfobject.embedSWF("http://www.youtube.com/v/-XTToohju4s ", "myContent", "300", "120", "9.0.0");
+				</script>
+				<!-- Angular -->
+				<script src = "https://ajax.googleapis.com/ajax/libs/angularjs/1.7.5/angular.min.js"></script>
+				<!-- Angular view routing -->
+				<script src = "https://ajax.googleapis.com/ajax/libs/angularjs/1.7.5/angular-route.min.js"></script>
+		</head>
+
+		<body ng-app = "AJSapp">		<!--Specify that ajs app contained within body -->
+				<!-- use exCtrl for this div -->
+				<div ng-controller = "exCtrl">		
+						<h2>Welcome {{obj.val()}} !</h2>
+				</div>
+				<p>		<!-- Links to switch view -->
+						<a href = "#!viewMessageBoard">View Mesage Board</a> , 
+						<a href = "#!hideMessageBoard">Hide Message Board</a>
+				</p>
+				<div ng-view></div>		<!-- Where router will place view -->
+				<!-- Define some ng-templates, id as the .htm files -->
+				<script type = "text/ng-template" id = "viewMessageBoard.htm">
+// https://phpenthusiast.com/blog/ajax-with-angular-and-php
+						<h1>Message Board</h1>
+						<form> 
+								<p>Enter your name and a message, press submit to add to message board.</p>
+								<div>
+										<label>Name</label>
+										<input type="text" ng-model="newName">
+								</div>
+								<div>
+										<label>Data</label>
+										<input type="text" ng-model="newData">
+								</div>
+								<input type="button" value="Add" ng-click="addDataToMsgBoard()">
+						</form>
+						<table>	
+								<tr>
+										<th>Time Stamp</th>
+										<th>Name</th>
+										<th>Data</th>
+								</tr>
+								<tr ng-repeat="data in msgData">
+										<td>{{ data.Name }}</td>
+										<td>{{ data.TimeStamp }}</td>
+										<td>{{ data.Data}}</td>
+								</tr>
+						</table>	
+				</script>
+				<script type = "text/ng-template" id = "hideMessageBoard.htm">
+						Click link to show the message board. 
+				</script>
+
+				<script>							
+						// create AJSapp module
+						var AJSapp = angular.module("AJSapp", ['ngRoute']);		// Load with dependency ngRoute
+						// $routeProvider is a services which sets config of URLs, maps em to corresponding .htm page of ng-template
+						// attaches a controller as well 
+						AJSapp.config(['$routeProvider', function($routeProvider) 
+						{
+								$routeProvider.when
+								('/viewMessageBoard', 
+										{
+												templateUrl: 'viewMessageBoard.htm', 
+												controller: 'msgBoardController'
+										}
+								);
+								$routeProvider.when
+								('/hideMessageBoard', 
+										{
+												templateUrl: 'hideMessageBoard.htm', 
+												controller: 'hideMsgBoardController'
+										}
+								);
+								$routeProvider.otherwise		// Default when no other matches
+								(
+										{
+										 		redirectTo: '/hideMessageBoard'
+										}
+								);
+						}]);
+
+						// Use $http service to make AJAX call to get data from text file
+						AJSapp.controller("msgBoardController", function($scope,$http) 
+								{
+										// Http.get sends Http retreive request, asynchronous response to each callback
+//										/test/demo_form.php?name1=value1&name2=value2
+										var dataFile = "/data/msgBoard.txt";
+										//$http.get('readTxtFile.php').then(
+										$http.get(dataFile).then(
+												function successCallback(response) 
+												{
+														$scope.msgData = response.data;
+												}, function failCallBack(response)
+												{
+														$scope.msgData = "msgBoardController: Failed to load data";
+												}
+										);
+
+										$scope.addDataToMsgBoard = function() 
+										{
+												$http(
+												{
+														method: 'POST',
+														url:  '/api/post.php',
+														data: {newName: $scope.newName, newData: $scope.newData}
+												}
+												).then(
+														function successMsgPostAdd(response) 
+														{// on success
+																// obtain and update msg
+														}, function failMsgPostAdd(response) 
+														{
+																$scope.msgData = "addDataToMsgBoard: failed to add data";
+														}
+												);
+										};
+
+										$scope.message = "yeyerr"; 
+										$scope.obj = 
+										{
+												name: "namename",
+												num: 5,
+												val: function()
+												{
+														var data = $scope.obj;
+														return data.name + ", 5 + num = " + (5 + data.num);
+												}
+										};
+								}
+						);		// end controller func 
+
+						AJSapp.controller("hideMsgBoardController", function($scope) 
+								{
+								}
+						);		// end controller func 
+						// register controller func exCtrl in AJSapp module 
+						// scope passed to controller func, create hellto obj, add title field 
+						AJSapp.controller("exCtrl", function($scope) 
+								{
+										$scope.helloTo = {};
+										$scope.helloTo.title = "geg";
+										$scope.obj = 
+										{
+												name: "namename",
+												num: 5,
+												val: function()
+												{
+														var data = $scope.obj;
+														return data.name + ", 5 + num = " + (5 + data.num);
+												}
+										};
+								}
+						);		// end controller func 
+				</script>
+
+				<br>
+				<br>
+				Enter some info pls:<br>
+				<form action="index.php" method="post">
+				stuff: <input type="text" name="usr" />
+				<input type="submit" />
+				</form>
+
+				<button type="button" onclick="displayDate()">Display Date</button>
+				<p id="demo"></p>
+
+				<div id="myContent">
+		</body>
+</html>
+

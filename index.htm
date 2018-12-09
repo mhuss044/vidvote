@@ -30,6 +30,7 @@
 				<script type = "text/ng-template" id = "viewMessageBoard.htm">
 // https://phpenthusiast.com/blog/ajax-with-angular-and-php
 						<h1>Message Board</h1>
+						<h1>Post Data: {{postData}}</h1>
 						<form> 
 								<p>Enter your name and a message, press submit to add to message board.</p>
 								<div>
@@ -49,9 +50,9 @@
 										<th>Data</th>
 								</tr>
 								<tr ng-repeat="data in msgData">
-										<td>{{ data.Name }}</td>
-										<td>{{ data.TimeStamp }}</td>
-										<td>{{ data.Data}}</td>
+										<td>{{data.TimeStamp}}</td>
+										<td>{{data.Name}}</td>
+										<td>{{data.Data}}</td>
 								</tr>
 						</table>	
 				</script>
@@ -91,32 +92,46 @@
 						// Use $http service to make AJAX call to get data from text file
 						AJSapp.controller("msgBoardController", function($scope,$http) 
 								{
-										// Http.get sends Http retreive request, asynchronous response to each callback
-//										/test/demo_form.php?name1=value1&name2=value2
-										var dataFile = "/data/msgBoard.txt";
-										//$http.get('readTxtFile.php').then(
-										$http.get(dataFile).then(
-												function successCallback(response) 
-												{
-														$scope.msgData = response.data;
-												}, function failCallBack(response)
-												{
-														$scope.msgData = "msgBoardController: Failed to load data";
-												}
-										);
+										$scope.msgData;
+										$scope.getMsgBoardData = function()
+										{
+												// Http.get sends Http retreive request, asynchronous response to each callback
+		//										/test/demo_form.php?name1=value1&name2=value2
+												var dataFile = "/data/msgBoard.txt";
+												//$http.get('readTxtFile.php').then(
+												$http.get(dataFile).then(
+														function successGetMsgCallBack(response) 
+														{
+																$scope.msgData = response.data;
+														}, function failGetMsgCallBack(response)
+														{
+																$scope.msgData = "getMsgBoardData: Failed to load data";
+														}
+												);
+										}
+										$scope.getMsgBoardData();	// Call to get data
 
 										$scope.addDataToMsgBoard = function() 
 										{
+												var tStamp = new Date();
+												$scope.curTStamp = tStamp.toLocaleString();
 												$http(
 												{
 														method: 'POST',
-														url:  '/api/post.php',
-														data: {newName: $scope.newName, newData: $scope.newData}
+														url:  'addToMsgBoard.php',
+														data: 
+														{
+																newName: $scope.newName, 
+																newData: $scope.newData, 
+																newTStamp: $scope.curTStamp 
+														}
 												}
 												).then(
 														function successMsgPostAdd(response) 
 														{// on success
 																// obtain and update msg
+																$scope.postData = response.data;
+																$scope.getMsgBoardData();	// Call to get data
 														}, function failMsgPostAdd(response) 
 														{
 																$scope.msgData = "addDataToMsgBoard: failed to add data";

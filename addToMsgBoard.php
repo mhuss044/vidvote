@@ -1,5 +1,11 @@
 <?php
-		$postdata = file_get_contents("php://input");
+		$postdata = file_get_contents("php://input");	// Get POST in a JSON string
+		$messageFile = file_get_contents("./data/msgBoard.txt");	// ./ is required, specifies local filesys
+
+		// conv messageFile to arr, trunc arr to last 1000 msgs
+		$messagesArr = json_decode($messageFile, true);	
+//		var_dump($messagesArr);
+//		echo $messagesArr[0]["Name"]." ".$messagesArr[0]["Data"];
 
 		if(isset($postdata) && !empty($postdata))
 		{
@@ -16,4 +22,5 @@
 
 				echo $timeStamp.": ".$newName." ".$newData;
 		}
+
 ?>

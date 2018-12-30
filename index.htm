@@ -14,33 +14,40 @@
 				<script src = "https://ajax.googleapis.com/ajax/libs/angularjs/1.7.5/angular.min.js"></script>
 				<!-- Angular view routing -->
 				<script src = "https://ajax.googleapis.com/ajax/libs/angularjs/1.7.5/angular-route.min.js"></script>
+				<title>Vote on Vids</title>
 		</head>
-
 		<body ng-app = "AJSapp">		<!--Specify that ajs app contained within body -->
+				<center><img src="/res/banner.jpg" width="204" height="100" /></center>
+				<center><h1>Menu</h1></center>
+				<center>
+						<a class="menustyle" href="index.htm">Home</a> --
+						<a class="menustyle" href="commlists.php">Community Lists</a> --
+						<a class="menustyle" href="ylists.php">Your Lists</a> -- 
+						<a class="menustyle" href="contact.php">Contact</a> --
+						<a class="menustyle" href="howto.php">How to Use</a>
+				</center>
 				<!-- use exCtrl for this div -->
 				<div ng-controller = "exCtrl">		
-						<h2>Welcome {{obj.val()}} !</h2>
 				</div>
 				<p>		<!-- Links to switch view -->
-						<a href = "#!viewMessageBoard">View Mesage Board</a> , 
-						<a href = "#!hideMessageBoard">Hide Message Board</a>
+						<a class = "menustyle" href = "#!viewMessageBoard">View Mesage Board</a> , 
+						<a class = "menustyle" href = "#!hideMessageBoard">Hide Message Board</a>
 				</p>
-				<div ng-view></div>		<!-- Where router will place view -->
+				<div class = "bodyBox" ng-view></div>		<!-- Where router will place view -->
 				<!-- Define some ng-templates, id as the .htm files -->
 				<script type = "text/ng-template" id = "viewMessageBoard.htm">
-						<h1>Message Board</h1>
-						<h1>Post Data: {{postData}}</h1>
+						<center>
+								<h1>Message Board</h1>
+						</center>
 						<form> 
 								<p>Enter your name and a message, press submit to add to message board.</p>
 								<div>
-										<label>Name</label>
+										<label>Name:</label>
 										<input type="text" ng-model="newName">
-								</div>
-								<div>
-										<label>Data</label>
+										<label>Message:</label>
 										<input type="text" ng-model="newData">
+										<input type="button" value="Add" ng-click="addDataToMsgBoard()">
 								</div>
-								<input type="button" value="Add" ng-click="addDataToMsgBoard()">
 						</form>
 						<table>	
 								<tr>
@@ -48,12 +55,16 @@
 										<th>Name</th>
 										<th>Data</th>
 								</tr>
-								<tr ng-repeat="data in msgData">
-										<td>{{data.TimeStamp}}</td>
-										<td>{{data.Name}}</td>
-										<td>{{data.Data}}</td>
-								</tr>
-						</table>	
+						</table>
+						<div id="autoScrollBox">
+								<table>
+										<tr ng-repeat="data in msgData">
+												<td>{{data.TimeStamp}}</td>
+												<td>{{data.Name}}</td>
+												<td>{{data.Data}}</td>
+										</tr>
+								</table>	
+						</div>
 				</script>
 				<script type = "text/ng-template" id = "hideMessageBoard.htm">
 						Click link to show the message board. 
@@ -92,13 +103,21 @@
 						AJSapp.controller("msgBoardController", function($scope,$http) 
 								{
 										$scope.msgData;
+										//	This func retreives JSON msgs from msgBoard file
+										//	url used to be msgBoard.txt but seems that would get cached response
+										//	instead of retreive the file with updated response
+										//	so serverside php file reads msgBoard file and returns it to calling JS
 										$scope.getMsgBoardData = function()
 										{
 												// Http.get sends Http retreive request, asynchronous response to each callback
 		//										/test/demo_form.php?name1=value1&name2=value2
-												var dataFile = "/data/msgBoard.txt";
-												//$http.get('readTxtFile.php').then(
-												$http.get(dataFile).then(
+												$http(
+												{
+														cache: false,		// required so that new fetch is done instead of cached
+														method: 'GET',
+														url: 'readMsgBoard.php'	 
+												}
+												).then(
 														function successGetMsgCallBack(response) 
 														{
 																$scope.msgData = response.data;
@@ -107,7 +126,7 @@
 																$scope.msgData = "getMsgBoardData: Failed to load data";
 														}
 												);
-										}
+										};
 										$scope.getMsgBoardData();	// Call to get data
 
 										$scope.addDataToMsgBoard = function() 
@@ -116,6 +135,7 @@
 												$scope.curTStamp = tStamp.toLocaleString();
 												$http(
 												{
+														cache: false,		// required so that new fetch is done instead of cached
 														method: 'POST',
 														url:  'addToMsgBoard.php',
 														data: 
@@ -128,8 +148,6 @@
 												).then(
 														function successMsgPostAdd(response) 
 														{// on success
-																// obtain and update msg
-																$scope.postData = response.data;
 																$scope.getMsgBoardData();	// Call to get data
 														}, function failMsgPostAdd(response) 
 														{
@@ -175,19 +193,6 @@
 								}
 						);		// end controller func 
 				</script>
-
-				<br>
-				<br>
-				Enter some info pls:<br>
-				<form action="index.php" method="post">
-				stuff: <input type="text" name="usr" />
-				<input type="submit" />
-				</form>
-
-				<button type="button" onclick="displayDate()">Display Date</button>
-				<p id="demo"></p>
-
-				<div id="myContent">
 		</body>
 </html>
 

@@ -14,7 +14,7 @@
 		{
 				$dataArr = json_decode($postdata);	// returns an obj from the json string
 
-				// Sanitize:
+				// Sanitize: preg_replace: "/search/": '/' delimeter req
 				$newName  = preg_replace('/[^a-zA-Z ]/','',$dataArr->newName); // replace any non letter/whitespace
 				$newData  = preg_replace('/[^a-zA-Z ]/','',$dataArr->newData); // replace any non letter/whitespace
 //				$newData = preg_replace('/[^0-9 ]/','',$dataArr->newData);	// replace any non num with space

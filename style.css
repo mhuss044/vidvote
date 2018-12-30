@@ -1,4 +1,5 @@
 <style type="text/css">
+/* only these sort of comments, and dont place inside {} braces or else will change behavior of css..? */
 /*
 ul
 {
@@ -66,7 +67,7 @@ background-color:#58626f;
 /*
 a:link,a:visited
 {
-display:block; /*Makes the element.. had menu items in serial, became all vertical*/
+display:block; //Makes the element.. had menu items in serial, became all vertical
 width:120px;
 font-weight:bold;
 color:#FFFFFF;
@@ -91,8 +92,7 @@ background-color:#7A991A;
 {
 	border-style:solid;
 	border-width:5px;	
-        /*border-color:#000000;*/
-background-color:#333300;
+	background-color:#333300;
 	padding:4px;
 	background-color:#333300;
 }
@@ -102,7 +102,7 @@ background-color:#333300;
 	float:left;
 	border-style:solid;
 	border-width:5px;	
-        border-color:#000000;
+	border-color:#000000;
 	padding:4px;
 	text-align:center;
 }
@@ -110,6 +110,17 @@ background-color:#333300;
 .subBox:hover,subBox:active
 {
 	background-color:#7A991A;
+}
+
+/* The lines display: flex; and flex-direction: column-reverse; result in autoscroll to bottom*/
+#autoScrollBox
+{
+	height: 50%;
+	width: 100%;
+	border: 2px solid black; 
+	overflow: auto; 
+	display: flex;	
+	flex-direction: column-reverse;
 }
 
 </style>

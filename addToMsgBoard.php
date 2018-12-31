@@ -18,7 +18,6 @@
 				$newName  = preg_replace('/[^a-zA-Z ]/','',$dataArr->newName); // replace any non letter/whitespace
 				$newData  = preg_replace('/[^a-zA-Z ]/','',$dataArr->newData); // replace any non letter/whitespace
 //				$newData = preg_replace('/[^0-9 ]/','',$dataArr->newData);	// replace any non num with space
-				$timeStamp = $dataArr->newTStamp;
 //				if($newName  == '' || $newData == '') return;	// If after sanitize empty then done
 				//				file_get_contents to read json text file, decode it into arr, add new data to arr, then
 				//				$json_data = json_encode($posts);
@@ -26,8 +25,10 @@
 
 				//echo $timeStamp.": ".$newName." ".$newData;
 		}
+
+		date_default_timezone_set('Canada/Eastern');	// Ensure that the below date() func returns ETC date
 		$newPost = array();
-		$newPost["TimeStamp"] = $timeStamp;
+		$newPost["TimeStamp"] = date("Y/m/d g:i:s a");
 		$newPost["Name"] = $newName;
 		$newPost["Data"] = $newData;
 

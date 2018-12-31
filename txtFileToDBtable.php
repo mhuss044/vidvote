@@ -29,6 +29,7 @@
 	$file = "./data/";
 	$handle = opendir('./data/');	// Open txtFile data directory
 	$counter = 0;
+	date_default_timezone_set('Canada/Eastern');	// Ensure that the below date() func returns ETC date
 	
 	// read directory entries
 	while(false !== ($entry = readdir($handle)))	// Obtain a directory entry
@@ -37,16 +38,20 @@
         if(strpos($entry,".txt"))	// Return false if 'txt' not found
 		{
 			$counter++;
-
 //			$newName  = preg_replace(".txt",'',$entry); // remove '.txt'  
 			echo "<br>".$counter.": ".preg_replace("/.txt/",'',$entry)."<br>";	// "/search/": '/' delimeter req
-			echo file_get_contents("./data/".$entry)."<br>";	
+		//	echo file_get_contents("./data/".$entry)."<br>";	
 			
 			// INSERT INTO tableName (column1, ..) VALUES ('data', ..)
 			// In the columns to be editted list, rec_Id is left out since its autoincd by mysql
 			// column list to be editted matches values list to insert
 			$sql = "INSERT INTO userRecords (usrName, date_created, date_lastModified, rec_data) 
-				VALUES (".preg_replace("/.txt/",'',$entry).", ". .", ". .", ".file_get_contents("./data/".$entry).")";
+				VALUES (\"".preg_replace("/.txt/",'',$entry)."\", \"".date("Y/m/d g:i:s a")."\", \"".date("Y/m/d g:i:s a")."\", \"".file_get_contents("./data/".$entry)."\")";
+
+			if (mysqli_query($conn, $sql)) 
+				echo "Table entry created successfully: ".preg_replace("/.txt/",'',$entry);
+			else 
+				echo "Error creating error: ".mysqli_error($conn);
 		}
     }
 	closedir($handle);

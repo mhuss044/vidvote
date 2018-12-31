@@ -131,8 +131,6 @@
 
 										$scope.addDataToMsgBoard = function() 
 										{
-												var tStamp = new Date();
-												$scope.curTStamp = tStamp.toLocaleString();
 												$http(
 												{
 														cache: false,		// required so that new fetch is done instead of cached
@@ -141,8 +139,7 @@
 														data: 
 														{
 																newName: $scope.newName, 
-																newData: $scope.newData, 
-																newTStamp: $scope.curTStamp 
+																newData: $scope.newData 
 														}
 												}
 												).then(

@@ -17,7 +17,8 @@
 			echo "Failed to connect:".mysqli_connect_error();
 		}
 		 */
-		//mysqli_set_charset($connect, "utf8");
+		// Ensure defualt charset used to send/rcv data, matches whats listed in DB 
+		mysqli_set_charset($connect, "utf8");
 		return $connect;
 	 }
 ?>

@@ -1,5 +1,6 @@
 <?php
 		// TODO: use PHP func http_special_chars func to sanitize
+		// TODO: count num messages, if >1000? delete first, add new msg on to end
 
 		$msgBoardFile = "./data/msgBoard.txt";
 		$postdata = file_get_contents("php://input");	// Get POST in a JSON string

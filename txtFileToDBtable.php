@@ -1,4 +1,8 @@
 <?php
+	// TODO: finish script: reads dir, sanitize, create record
+	// Purpose of script is to take usr data stored in txt and insert into records onto DB
+	// Script reads data directory, opens each file, creates query, and inserts into DB table
+	// mysqli_real_escape_string: escapes NUL (ASCII 0), \n, \r, \, ', ", and Control-Z
 	require 'siteDBConnect.php';	// Contains connect func
 	
 	// Connect to the DB
@@ -26,11 +30,23 @@
 	else 
 		echo "Error creating table: ".mysqli_error($conn);
 
-	$file = "./data/";
+	$file = "./data/msgBoard.txt";
 	$handle = opendir('./data/');	// Open txtFile data directory
 	$counter = 0;
 	date_default_timezone_set('Canada/Eastern');	// Ensure that the below date() func returns ETC date
-	
+
+	// Extract data from file
+	$data = file_get_contents($file);
+	// Check to see if data is JSON
+	json_decode($data);
+	if(json_last_error() == JSON_ERROR_NONE)
+		$data = mysqli_real_escape_string($conn, $data);	// Sanitize so create valid sql
+
+	$sql = "INSERT INTO userRecords (usrName, date_created, date_lastModified, rec_data) 
+			VALUES (\"msgBoard\", \"".date("Y/m/d g:i:s a")."\", \"".date("Y/m/d g:i:s a")."\", \"".$data."\")";
+//	echo "<br>".$sql."<br>";
+
+	/*
 	// read directory entries
 	while(false !== ($entry = readdir($handle)))	// Obtain a directory entry
 	{
@@ -54,6 +70,7 @@
 				echo "Error creating error: ".mysqli_error($conn);
 		}
     }
+	 */
 	closedir($handle);
 	mysqli_close($conn);
 ?>

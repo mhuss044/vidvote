@@ -7,7 +7,7 @@
 		$messageFile = file_get_contents($msgBoardFile);	// ./ is required, specifies local filesys
 
 		// conv messageFile to arr, trunc arr to last 1000 msgs
-		$messagesArr = json_decode($messageFile, true);	
+		$messagesArr = json_decode($messageFile, true);		// true: return an associative array
 //		var_dump($messagesArr);
 //		echo $messagesArr[0]["Name"]." ".$messagesArr[0]["Data"];
 

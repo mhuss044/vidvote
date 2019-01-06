@@ -1,4 +1,5 @@
 <!-- TODO -->
+<!-- TODO: addToMsgBoard get users date(y/m/d) and pass to script -->
 <!-- k so user gives username, script opens .txt file named username -->
 <!-- file lists YT links, with two values beside em: ups, downs -->
 <!-- display this info -->
@@ -39,13 +40,17 @@
 							<h1>Browse Lists</h1>
 					</center>
 					<div id="autoScrollBox">
-							<table>
-									<tr ng-repeat="data in msgData">
-											<td>{{data.TimeStamp}}</td>
-											<td>{{data.Name}}</td>
-											<td>{{data.Data}}</td>
+						{{recData}}
+						<div id="autoScrollBox">
+							<div class="subBox" ng-repeat="data in recData">
+								<table>
+									<tr>
+										<td>{{data.usrName}}</td>
+										<td>{{data.rec_data}}</td>
 									</tr>
-							</table>	
+								</table>	
+							</div>
+						</div>
 					</div>
 				</script>
 				<script type = "text/ng-template" id = "viewMessageBoard.htm">
@@ -119,6 +124,50 @@
 								);
 						}]);
 
+						AJSapp.controller("browseListsController", function($scope) 
+								{
+									// Contact php script with offset, returns 10 records, and display em
+									$scope.recData = "he";
+									$scope.browseRecOffset = 0;
+
+									$scope.incBrowseRecOffset = function()
+									{
+										$scope.browseRecOffset = $scope.browseRecOffset + 1;
+										// do not increment past...
+									};
+
+									$scope.decBrowseRecOffset = function()
+									{
+										if($scope.browseRecOffset > 0)
+											$scope.browseRecOffset = $scope.browseRecOffset - 1;
+									};
+
+									$scope.getRecordsToBrowse = function()
+									{
+											// Http.get sends Http retreive request, asynchronous response to each callback
+											$http(
+											{
+													cache: false,		// required so that new fetch is done instead of cached
+													method: 'GET',
+													url: 'browseRecords.php'	 
+													data:
+													{
+														offset: $scope.browseRecOffset
+													}
+											}
+											).then(
+													function successGetRecCallBack(response) 
+													{
+															$scope.recData = response.data;
+													}, function failGetRecCallBack(response)
+													{
+															$scope.recData = "getRecordsToBrowse: Failed to fetch data.";
+													}
+											);
+									};
+									$scope.getRecordsToBrowse();	// Call to get data
+								}
+						);		// end controller func 
 						// Use $http service to make AJAX call to get data from text file
 						AJSapp.controller("msgBoardController", function($scope,$http) 
 								{

@@ -1,15 +1,15 @@
 <!-- TODO -->
-<!-- TODO: addToMsgBoard get users date(y/m/d) and pass to script -->
+<!-- Move JS code, templates, controllers, to their own files, looks cleaner-->
 <!-- k so user gives username, script opens .txt file named username -->
 <!-- file lists YT links, with two values beside em: ups, downs -->
 <!-- display this info -->
-<!-- display this info http://www.w3schools.com/php/php_file.asp -->
 <html>
 		<head>
 				<link rel="stylesheet" type="text/css" href="style.css">
 				<script type="text/javascript" src="swfobject.js"></script>
 				<script type="text/javascript">
-					swfobject.embedSWF("http://www.youtube.com/v/-XTToohju4s ", "myContent", "300", "120", "9.0.0");
+					// Apparently get chrome-error?warning? if try and embed flash content below 400x400
+					swfobject.embedSWF("http://www.youtube.com/v/-XTToohju4s ", "myContent", "400", "400", "9.0.0");
 				</script>
 				<!-- Angular -->
 				<script src = "https://ajax.googleapis.com/ajax/libs/angularjs/1.7.5/angular.min.js"></script>
@@ -39,17 +39,17 @@
 					<center>
 							<h1>Browse Lists</h1>
 					</center>
+					Offset: {{browseRecOffset}} 
+					<input type="button" value="scrollUp" ng-click="browseRecOffsetAdjust(1)">
+					<input type="button" value="scrollDown" ng-click="browseRecOffsetAdjust(-1)">
 					<div id="autoScrollBox">
-						{{recData}}
-						<div id="autoScrollBox">
-							<div class="subBox" ng-repeat="data in recData">
-								<table>
-									<tr>
-										<td>{{data.usrName}}</td>
-										<td>{{data.rec_data}}</td>
-									</tr>
-								</table>	
-							</div>
+						<div class="subBox" ng-repeat="data in recData"> 
+							<table>
+								<tr >
+									<td><p id="blueid">Name:</p> {{data.usrName}}</td>
+									<td><p id="blueid">Data:</p> {{data.rec_data}}</td>
+								</tr>
+							</table>	
 						</div>
 					</div>
 				</script>
@@ -60,10 +60,10 @@
 					<form> 
 							<p>Enter your name and a message, press submit to add to message board.</p>
 							<div>
-									<label>Name:</label>
-									<input type="text" ng-model="newName">
-									<label>Message:</label>
-									<input type="text" ng-model="newData">
+<!--									<label>Name:</label> -->
+									<input type="text" ng-model="newName" placeholder="Enter Name">
+<!--									<label>Message:</label> -->
+									<input type="text" ng-model="newData" placeholder="Enter Message">
 									<input type="button" value="Add" ng-click="addDataToMsgBoard()">
 							</div>
 					</form>
@@ -124,22 +124,43 @@
 								);
 						}]);
 
-						AJSapp.controller("browseListsController", function($scope) 
+						AJSapp.controller("browseListsController", function($scope, $http) 
 								{
 									// Contact php script with offset, returns 10 records, and display em
-									$scope.recData = "he";
+									$scope.recData;
 									$scope.browseRecOffset = 0;
+									$scope.browseRecMaxRows = 0;
 
-									$scope.incBrowseRecOffset = function()
+									$scope.browseRecOffsetAdjust = function(recOffSetAdj)
 									{
-										$scope.browseRecOffset = $scope.browseRecOffset + 1;
-										// do not increment past...
-									};
-
-									$scope.decBrowseRecOffset = function()
-									{
-										if($scope.browseRecOffset > 0)
-											$scope.browseRecOffset = $scope.browseRecOffset - 1;
+										if(recOffSetAdj > 0)
+										{
+											// http call script which
+											// Http.get sends Http retreive request, asynchronous response to each callback
+											$http(
+											{
+													cache: false,		// required so that new fetch is done instead of cached
+													method: 'GET',
+													url: 'browseRecMaxRows.php'	 
+											}
+											).then(
+													function successRecOffsetCallBack(response) 
+													{
+															$scope.browseRecMaxRows = response.data;
+													}, function failRecOffsetCallBack(response)
+													{
+															$scope.browseRecMaxRows = "failRecOffsetCallBack: Failed to fetch max rows.";
+													}
+											);
+											
+											if($scope.browseRecOffset < $scope.browseRecMaxRows)
+												$scope.browseRecOffset = $scope.browseRecOffset + 1;
+										}
+										else
+										{
+											if($scope.browseRecOffset > 0)
+												$scope.browseRecOffset = $scope.browseRecOffset - 1;
+										}
 									};
 
 									$scope.getRecordsToBrowse = function()
@@ -149,7 +170,7 @@
 											{
 													cache: false,		// required so that new fetch is done instead of cached
 													method: 'GET',
-													url: 'browseRecords.php'	 
+													url: 'browseRecords.php',	 
 													data:
 													{
 														offset: $scope.browseRecOffset
